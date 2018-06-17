@@ -8,6 +8,7 @@ Vue.use(Router)
 // const ItemView = () => import('../views/ItemView.vue')
 // const UserView = () => import('../views/UserView.vue')
 const Test = ()=>import('../components/Test.vue');
+const Test2 = ()=>import('../components/Test2.vue');
 
 export function createRouter () {
   return new Router({
@@ -22,7 +23,8 @@ export function createRouter () {
       // { path: '/job/:page(\\d+)?', component: createListView('job') },
       // { path: '/item/:id(\\d+)', component: ItemView },
       // { path: '/user/:id', component: UserView },
-      { path: '/*', alias:'/', component: Test }
+      { path: '/test2',  component: Test2 },
+      { path: '/*', component: Test },
     ]
   })
 }

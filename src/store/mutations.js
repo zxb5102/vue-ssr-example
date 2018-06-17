@@ -2,7 +2,12 @@
 
 export default {
     getData:(state)=>{
-      return {num:1}
+      // console.log(333);
+      // console.log()
+      // console.log('111111111111111111111111111111111111111111111111111111111111111');
+      state.num =1;
+      state.msg = 'test';
+            // return {num:1,msg:'test'}
     }
   // SET_ACTIVE_TYPE: (state, { type }) => {
   //   state.activeType = type

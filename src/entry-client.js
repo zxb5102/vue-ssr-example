@@ -42,16 +42,21 @@ router.onReady(() => {
     const matched = router.getMatchedComponents(to)
     const prevMatched = router.getMatchedComponents(from)
     let diffed = false
+    // console.log(matched);
+    // console.log(prevMatched);
+    // nsole
     //确保不会重复取数据 预防 当前需要渲染的组件中包含上个组件中已经渲染的组件 导致 重复取数据的情况
     const activated = matched.filter((c, i) => {
       return diffed || (diffed = (prevMatched[i] !== c))
     })
+    // console.log(activated);
     const asyncDataHooks = activated.map(c => c.asyncData).filter(_ => _)
     if (!asyncDataHooks.length) {
       return next()
     }
 
     // bar.start()
+    // console.log(asyncDataHooks);
     Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
       .then(() => {
         // bar.finish()
