@@ -8,28 +8,18 @@ const isDev = process.env.NODE_ENV !== "production";
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
 export default context => {
-  // console.log('begin');
   return new Promise((resolve, reject) => {
-    // return reject({ url: '/test' });
     const s = isDev && Date.now();
     const { app, router, store } = createApp();
-    // console.log("create over");
 
     const { url } = context;
-    // console.log(url);
     const { fullPath } = router.resolve(url).route;
-    // console.log(fullPath);
-    // console.log(2);
-    // console.log(22,fullPath, url);
     if (fullPath !== url) {
-      // console.log(3);
       return reject({ url: fullPath });
     }
-    // console.log("get router comp");
     // set router's location
     router.push(url);
 
-    // console.log(url);
     // wait until router has resolved possible async hooks
     router.onReady(() => {
       const matchedComponents = router.getMatchedComponents();
@@ -41,8 +31,6 @@ export default context => {
       // A preFetch hook dispatches a store action and returns a Promise,
       // which is resolved when the action is complete and store state has been
       // updated.
-      // console.log('begin fetch data')
-      // console.log("begin fetch data");
       Promise.all(
         matchedComponents.map(
           ({ asyncData }) =>

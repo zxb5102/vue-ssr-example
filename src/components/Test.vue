@@ -1,7 +1,9 @@
 <template>
     <div>
     <h1 class="msg">
-        {{msg}}<br>
+        {{msg}}
+    </h1>
+    <h1 class="msg">
         {{testDataFetch}}
     </h1>
     </div>   
@@ -9,27 +11,23 @@
 <script>
 export default {
   asyncData({ store }) {
-    //   console.log(222);
-    // console.log(store.state, 1);
-    store.dispatch("getData");
-    // console.log(store.state, 2);
+    store.dispatch("SET_INFO", { info: "test info" });
   },
   data() {
     return {
-      msg: "test"
+      msg: "test msg"
     };
   },
   computed: {
     testDataFetch() {
-        // console.log(22);
-      return this.$store.state.num;
+      return this.$store.state.info;
     }
   }
 };
 </script>
 <style lang="stylus">
 .msg {
-    color: red;
+  color: red;
 }
 </style>
 

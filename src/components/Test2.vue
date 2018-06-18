@@ -1,39 +1,30 @@
 <template>
     <div>
-    <h1 class="msg2">
-        msg33
-        <!-- {{msg}}<br>
-        {{testDataFetch}} -->
-    </h1>
+        <h1 class="msg_">
+            test2.vue page
+        </h1>
+        <ul>
+            <li v-for="(item,dex) in dataList" :key="dex">
+                <span>{{item}}</span>
+            </li>
+        </ul>
     </div>   
 </template>
 <script>
 export default {
-    // created(){
-    //     console.log('333333');
-    // },
   asyncData({ store }) {
-    //   console.log(222);
-    // console.log(store.state, 1);
-    store.dispatch("getData");
-    // console.log(store.state, 2);
+    store.dispatch("GET_DATA");
   },
-//   data() {
-//     return {
-//       msg: "test"
-//     };
-//   },
-//   computed: {
-//     testDataFetch() {
-//         // console.log(22);
-//       return this.$store.state.num;
-//     }
-//   }
+  computed: {
+    dataList() {
+      return this.$store.getters.dataList;
+    }
+  }
 };
 </script>
 <style lang="stylus">
-.msg {
-    color: red;
+.msg_ {
+    color: blue;
 }
 </style>
 
