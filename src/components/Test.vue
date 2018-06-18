@@ -25,7 +25,7 @@ export default {
   }
 };
 </script>
-<style lang="stylus">
+<style lang="less">
 .msg {
   color: red;
 }

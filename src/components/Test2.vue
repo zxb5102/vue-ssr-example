@@ -22,7 +22,7 @@ export default {
   }
 };
 </script>
-<style lang="stylus">
+<style lang="less" scoped>
 .msg_ {
     color: blue;
 }
