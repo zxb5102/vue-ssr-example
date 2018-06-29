@@ -7,6 +7,7 @@ const compression = require('compression')
 const microcache = require('route-cache')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
+const proxy = require('http-proxy-middleware')
 
 const isProd = process.env.NODE_ENV === 'production'
 const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -14,9 +15,28 @@ const serverInfo =
   `express/${require('express/package.json').version} ` +
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
-const app = express()
+const proxyOptions = {
+  target: 'http://test.domain.com', // target host
+  changeOrigin: true,               // needed for virtual hosted sites
+  ws: true,                         // proxy websockets
+  pathRewrite: {
+    '^/api': '',     // rewrite path
+  },
+  router: {
+    // when request.headers.host == 'dev.localhost:3000',
+    // override target 'http://www.example.org' to 'http://localhost:8000'
+    // 'dev.localhost:3000' : 'http://localhost:8000'
+  }
+};
 
-function createRenderer (bundle, options) {
+var serverProxy = proxy(proxyOptions);
+const app = express()
+/**
+ * 配置代理服务器  将 /api 开头的请求代理掉 重定向到 指定的 服务器
+ */
+app.use('/api', serverProxy);
+
+function createRenderer(bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
   return createBundleRenderer(bundle, Object.assign(options, {
     // for component caching
@@ -58,7 +78,7 @@ if (isProd) {
        * bundle 为 webpack 打包的服务器 运行 js
        * options  包含 模板信息 和 客户端资源部署信息
        */
-      renderer = createRenderer(bundle, options) 
+      renderer = createRenderer(bundle, options)
     }
   )
 }
@@ -82,7 +102,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
 app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
 
-function render (req, res) {
+function render(req, res) {
   const s = Date.now()
 
   res.setHeader("Content-Type", "text/html")
@@ -92,7 +112,7 @@ function render (req, res) {
   const handleError = err => {
     if (err.url) {// 传入的 URL 和解析的不一致 重定向到解析的 URL 重新路由一次
       res.redirect(err.url)
-    } else if(err.code === 404) {
+    } else if (err.code === 404) {
       res.status(404).send('404 | Page Not Found')
     } else {
       // Render Error Page or Redirect
