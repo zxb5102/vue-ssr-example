@@ -13,12 +13,13 @@ export default context => {
     const { app, router, store } = createApp();
 
     const { url } = context;
-    const { fullPath } = router.resolve(url).route;
+    const { fullPath,url } = router.resolve(url).route;
     if (fullPath !== url) {
       return reject({ url: fullPath });
     }
     // set router's location
     router.push(url);
+    store.dispatch('CHANGE_AGENT_FLAG',{value:isPda});
 
     // wait until router has resolved possible async hooks
     router.onReady(() => {
